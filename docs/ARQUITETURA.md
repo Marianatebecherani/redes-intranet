@@ -48,6 +48,7 @@ O proxy reverso e o balanceamento de carga entre as três réplicas são feitos 
 
 ## Pontos de atenção na EC2
 
-- O container da aplicação será executado com o usuário `node` (UID `1000`). As pastas compartilhadas precisam permitir escrita para esse UID, por exemplo com `sudo chown -R 1000:1000 /compartilhamento`.
-- O nginx deve encaminhar as requisições para `127.0.0.1:3001`, `127.0.0.1:3002` e `127.0.0.1:3003`.
+- O container da aplicação é executado com o usuário `node` (UID `1000`). As pastas compartilhadas precisam permitir escrita para esse UID, por exemplo com `sudo chown -R 1000:1000 /compartilhamento`.
+- O nginx deve encaminhar as requisições para `127.0.0.1:3001`, `127.0.0.1:3002` e `127.0.0.1:3003`. Por padrão, as portas são publicadas apenas em `127.0.0.1` (`APP_BIND_ADDRESS`), ficando acessíveis somente pelo nginx da própria EC2.
+- Os procedimentos completos estão em [infra/README.md](../infra/README.md).
 - O limite de tamanho de upload precisa ser compatível entre o nginx (`client_max_body_size`) e a aplicação.
