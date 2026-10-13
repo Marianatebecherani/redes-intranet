@@ -24,18 +24,22 @@ O proxy reverso e o balanceamento de carga entre as três réplicas são feitos 
 - **Contexto:** o nginx distribuirá as requisições entre três réplicas sem garantia de que o mesmo usuário seja atendido sempre pela mesma instância.
 - **Decisão:** após o login, o backend emite um JWT assinado com um segredo compartilhado pelas três réplicas e o envia em cookie `httpOnly`. As senhas são armazenadas com hash bcrypt.
 - **Consequências:** qualquer réplica valida o token sem consultar uma sessão em memória. O logout remove o cookie do navegador; o token expira pelo tempo de validade configurado.
+- **Revogação:** a cada requisição autenticada, o backend recarrega o usuário do banco. Usuários desativados ou excluídos perdem o acesso imediatamente, e mudanças de perfil passam a valer na requisição seguinte, em qualquer réplica.
+- **Senhas:** cada usuário pode trocar a própria senha pela API; administradores podem redefinir a senha de outros usuários.
 
 ### Perfis e permissões
 
 - **Perfis:** `admin` e `usuario`.
 - **Regras:** as permissões são verificadas no backend em todas as rotas protegidas, inclusive nas operações de arquivos. A interface apenas oculta ações indisponíveis.
+- **Administradores:** um administrador não pode remover o próprio acesso, e a intranet mantém sempre pelo menos um administrador ativo.
 - **Pastas:** `admin` acessa `/compartilhamento/admin` e `/compartilhamento/geral` com upload, download, criação de pastas e exclusão; `usuario` acessa somente `/compartilhamento/geral`, com upload e download.
 
 ### Persistência
 
 - **Banco:** volume nomeado `mysql-data` montado em `/var/lib/mysql`. As tabelas e os dados iniciais são criados por scripts SQL de [database/](../database/README.md) na primeira inicialização do volume.
 - **Arquivos:** as pastas do host são montadas por bind mount nas três réplicas. Os caminhos no host são configuráveis por variáveis de ambiente para permitir o desenvolvimento local; na EC2, apontam para `/compartilhamento/admin` e `/compartilhamento/geral`.
-- **Segurança de caminhos:** o backend resolve cada caminho solicitado dentro da raiz da pasta permitida e rejeita tentativas de sair dela (por exemplo, com `../`).
+- **Segurança de caminhos:** o backend resolve cada caminho solicitado dentro da raiz da pasta permitida e rejeita tentativas de sair dela, seja com `../` ou com links simbólicos.
+- **Uploads entre réplicas:** cada arquivo é gravado com nome temporário oculto e depois movido para um nome reservado com criação exclusiva. Assim, envios simultâneos de arquivos com o mesmo nome, em réplicas diferentes, não se sobrescrevem: o segundo recebe o sufixo ` (1)`.
 
 ### Editor de imagens PNG redondas
 
