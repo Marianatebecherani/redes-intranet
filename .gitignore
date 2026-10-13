@@ -1,0 +1,40 @@
+# Variáveis de ambiente e segredos locais
+.env
+.env.*
+!.env.example
+!.env.*.example
+!.env.sample
+!.env.template
+.secrets
+.secrets.*
+!.secrets.example
+
+# Logs e arquivos temporários
+*.log
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Saídas geradas e caches; adapte conforme as ferramentas adotadas
+dist/
+build/
+coverage/
+.cache/
+
+# Arquivos locais do sistema operacional
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Instruções do Claude: mantidas apenas localmente
+CLAUDE.md
+
+# Dependências do Node.js
+node_modules/
+
+# Pastas compartilhadas usadas no desenvolvimento local
+/compartilhamento/
+
+# Mantenha arquivos de lock, scripts SQL e configurações compartilhadas versionados.
