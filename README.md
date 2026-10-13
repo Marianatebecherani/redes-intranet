@@ -2,7 +2,7 @@
 
 Intranet conteinerizada com Docker, desenvolvida para o desafio **5) Docker e Intranet**: hospedar um site local de intranet com persistência de dados, banco de dados para gerenciamento de informações e sistema de autenticação para restringir acessos.
 
-> **Estado atual:** banco de dados e backend (API) implementados e testados. O frontend e os arquivos Docker ainda não foram implementados; o andamento está na seção [Metas do projeto](#metas-do-projeto).
+> **Estado atual:** banco de dados, backend e frontend implementados e testados. Os arquivos Docker ainda não foram implementados; o andamento está na seção [Metas do projeto](#metas-do-projeto).
 
 ## Arquitetura
 
@@ -42,11 +42,11 @@ As decisões técnicas estão detalhadas em [docs/ARQUITETURA.md](docs/ARQUITETU
 | 1 | Ambiente conteinerizado com Docker: 3 réplicas da aplicação e 1 banco MySQL. | Pendente |
 | 2 | Persistência de dados: volume do MySQL e pastas compartilhadas montadas nos containers. | Pendente |
 | 3 | Banco de dados para gerenciamento das informações da intranet. | Em andamento: tabelas e dados iniciais |
-| 4 | Sistema de autenticação com perfis `admin` e `usuario` para restringir acessos. | Em andamento: backend concluído, falta a tela de login |
-| 5 | Explorador de arquivos com upload e download em `/compartilhamento/admin` e `/compartilhamento/geral`. | Em andamento: API concluída, falta a interface |
-| 6 | Ferramenta para deixar imagens PNG em formato redondo. | Pendente |
+| 4 | Sistema de autenticação com perfis `admin` e `usuario` para restringir acessos. | Concluída |
+| 5 | Explorador de arquivos com upload e download em `/compartilhamento/admin` e `/compartilhamento/geral`. | Concluída (falta montar as pastas da EC2 no Docker) |
+| 6 | Ferramenta para deixar imagens PNG em formato redondo. | Concluída |
 | 7 | Usuários iniciais com permissões por pasta. | Concluída: usuários no banco e permissões aplicadas pela API |
-| 8 | Mural de comunicados, diretório de colaboradores e gestão de usuários. | Em andamento: API concluída, falta a interface |
+| 8 | Mural de comunicados, diretório de colaboradores e gestão de usuários. | Concluída |
 
 ### Permissões das pastas compartilhadas
 
