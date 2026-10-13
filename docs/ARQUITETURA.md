@@ -31,6 +31,7 @@ O proxy reverso e o balanceamento de carga entre as três réplicas são feitos 
 
 - **Perfis:** `admin` e `usuario`.
 - **Regras:** as permissões são verificadas no backend em todas as rotas protegidas, inclusive nas operações de arquivos. A interface apenas oculta ações indisponíveis.
+- **Comunicados:** administradores publicam comunicados, mas apenas o autor edita ou exclui cada um. Quando o autor é removido, o comunicado fica sem autor e qualquer administrador pode excluí-lo (não editá-lo), evitando registros sem dono.
 - **Administradores:** um administrador não pode remover o próprio acesso, e a intranet mantém sempre pelo menos um administrador ativo.
 - **Pastas:** `admin` acessa `/compartilhamento/admin` e `/compartilhamento/geral` com upload, download, criação de pastas e exclusão; `usuario` acessa somente `/compartilhamento/geral`, com upload e download.
 

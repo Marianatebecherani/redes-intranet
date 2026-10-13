@@ -26,7 +26,7 @@ Para testar o build pelo próprio backend, execute `npm run build` e inicie o ba
 | Rota | Acesso | Conteúdo |
 | --- | --- | --- |
 | Login | Público | Usuário e senha. Exibida sempre que não houver sessão válida. |
-| `/comunicados` | Todos | Mural de comunicados; administradores criam, editam e excluem. |
+| `/comunicados` | Todos | Mural de comunicados; administradores publicam, e os botões de editar e excluir aparecem apenas para o autor de cada comunicado (ou, para excluir, a qualquer admin quando o autor foi removido). |
 | `/colaboradores` | Todos | Diretório com busca; administradores mantêm os registros e vinculam logins. |
 | `/arquivos` | Todos | Explorador das pastas compartilhadas permitidas ao usuário: navegação por subpastas, upload (botão ou arrastar e soltar) e download; administradores também criam pastas e excluem itens. |
 | `/imagem-redonda` | Todos | Recorte de imagens PNG em círculo com fundo transparente, com zoom, posição e tamanho do resultado; o PNG pode ser baixado ou salvo em uma pasta compartilhada. |

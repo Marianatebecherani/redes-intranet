@@ -189,6 +189,41 @@ describe('API da intranet', { skip: !habilitado && 'defina TEST_DB_HOST para exe
       await admin.delete(`/api/comunicados/${criado.body.id}`).expect(204);
       await admin.delete(`/api/comunicados/${criado.body.id}`).expect(404);
     });
+
+    it('apenas o autor edita ou exclui o próprio comunicado', async () => {
+      const jean = await entrar('jean');
+      const mariana = await entrar('mariana');
+      const criado = await jean.post('/api/comunicados').send({ titulo: 'Teste do Jean', conteudo: 'Férias' }).expect(201);
+      const id = criado.body.id;
+
+      const negadoEdicao = await mariana.put(`/api/comunicados/${id}`).send({ titulo: 'Teste alterado', conteudo: 'x' }).expect(403);
+      assert.match(negadoEdicao.body.erro, /autor/);
+      await mariana.delete(`/api/comunicados/${id}`).expect(403);
+      const intacto = await jean.get('/api/comunicados').expect(200);
+      assert.equal(intacto.body.find((c) => c.id === id).titulo, 'Teste do Jean');
+
+      await jean.put(`/api/comunicados/${id}`).send({ titulo: 'Teste do Jean editado', conteudo: 'Férias' }).expect(200);
+      await jean.delete(`/api/comunicados/${id}`).expect(204);
+    });
+
+    it('comunicado de autor removido pode ser excluído, mas não editado, por outro admin', async () => {
+      const mariana = await entrar('mariana');
+      const novoAdmin = await mariana
+        .post('/api/usuarios')
+        .send({ username: 'teste-autor', nome: 'Teste Autor', senha: 'senha123', perfil: 'admin' })
+        .expect(201);
+      const autor = await entrar('teste-autor', 'senha123');
+      const criado = await autor.post('/api/comunicados').send({ titulo: 'Teste órfão', conteudo: 'x' }).expect(201);
+
+      await mariana.delete(`/api/usuarios/${novoAdmin.body.id}`).expect(204);
+      const lista = await mariana.get('/api/comunicados').expect(200);
+      assert.equal(lista.body.find((c) => c.id === criado.body.id).autorId, null);
+
+      await mariana.put(`/api/comunicados/${criado.body.id}`).send({ titulo: 'Teste x', conteudo: 'x' }).expect(403);
+      const comum = await entrar('fulano');
+      await comum.delete(`/api/comunicados/${criado.body.id}`).expect(403);
+      await mariana.delete(`/api/comunicados/${criado.body.id}`).expect(204);
+    });
   });
 
   describe('colaboradores', () => {

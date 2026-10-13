@@ -64,7 +64,9 @@ Todas as respostas são JSON (exceto downloads) e erros seguem o formato `{ "err
 | `GET` | `/api/auth/me` | 🔒 | Usuário logado. |
 | `PUT` | `/api/auth/senha` | 🔒 | Corpo `{ senhaAtual, novaSenha }`. Troca a própria senha. |
 | `GET` | `/api/comunicados` | 🔒 | Lista comunicados, mais recentes primeiro. |
-| `POST` / `PUT /:id` / `DELETE /:id` | `/api/comunicados` | 👑 | Corpo `{ titulo, conteudo }`. |
+| `POST` | `/api/comunicados` | 👑 | Corpo `{ titulo, conteudo }`. O usuário logado é registrado como autor. |
+| `PUT /:id` | `/api/comunicados` | 👑 autor | Corpo `{ titulo, conteudo }`. Apenas o autor edita. |
+| `DELETE /:id` | `/api/comunicados` | 👑 autor | Apenas o autor exclui; se o autor foi removido, qualquer admin pode excluir. |
 | `GET` | `/api/colaboradores?q=` | 🔒 | Lista o diretório; `q` busca por nome, setor, cargo, ramal ou e-mail. |
 | `POST` / `PUT /:id` / `DELETE /:id` | `/api/colaboradores` | 👑 | Corpo `{ nome, setor, cargo?, ramal?, email?, usuarioId? }`. |
 | `GET` | `/api/usuarios` | 👑 | Lista usuários (sem hashes de senha). |
@@ -81,6 +83,7 @@ Todas as respostas são JSON (exceto downloads) e erros seguem o formato `{ "err
 ### Regras de segurança
 
 - O login recarrega o usuário do banco a cada requisição: usuários desativados ou excluídos perdem o acesso imediatamente, em todas as réplicas.
+- Comunicados só podem ser editados ou excluídos pelo próprio autor (que precisa continuar com perfil `admin`). Comunicados cujo autor foi removido podem ser excluídos, mas não editados, por qualquer administrador.
 - Um administrador não pode remover o próprio perfil de admin, se desativar ou se excluir, e a intranet mantém sempre pelo menos um administrador ativo.
 - As rotas de arquivos verificam a permissão da pasta, rejeitam caminhos com `..` e links simbólicos que levem para fora da pasta compartilhada.
 - Uploads não sobrescrevem arquivos existentes: um nome repetido recebe o sufixo ` (1)`, ` (2)`, etc. O arquivo é gravado com nome temporário e só aparece na listagem após o envio completo.

@@ -8,7 +8,13 @@ import { useDados } from '../useDados.js';
 const VAZIO = { titulo: '', conteudo: '' };
 
 export function Comunicados() {
-  const { ehAdmin } = useSessao();
+  const { usuario, ehAdmin } = useSessao();
+
+  // Mesmas regras do backend: só o autor edita; o autor exclui, ou um admin
+  // quando o autor foi removido.
+  const podeEditar = (comunicado) => ehAdmin && comunicado.autorId === usuario.id;
+  const podeExcluir = (comunicado) =>
+    ehAdmin && (comunicado.autorId === usuario.id || comunicado.autorId === null);
   const { dados: comunicados, erro, carregando, recarregar } = useDados('/comunicados');
   const [form, setForm] = useState(VAZIO);
   const [editandoId, setEditandoId] = useState(null);
@@ -121,14 +127,18 @@ export function Comunicados() {
               {comunicado.atualizadoEm !== comunicado.criadoEm && ' (editado)'}
             </p>
             <p className="texto-livre">{comunicado.conteudo}</p>
-            {ehAdmin && (
+            {(podeEditar(comunicado) || podeExcluir(comunicado)) && (
               <div className="acoes">
-                <button type="button" className="botao botao-secundario" onClick={() => editar(comunicado)}>
-                  Editar
-                </button>
-                <button type="button" className="botao botao-perigo" onClick={() => excluir(comunicado)}>
-                  Excluir
-                </button>
+                {podeEditar(comunicado) && (
+                  <button type="button" className="botao botao-secundario" onClick={() => editar(comunicado)}>
+                    Editar
+                  </button>
+                )}
+                {podeExcluir(comunicado) && (
+                  <button type="button" className="botao botao-perigo" onClick={() => excluir(comunicado)}>
+                    Excluir
+                  </button>
+                )}
               </div>
             )}
           </article>

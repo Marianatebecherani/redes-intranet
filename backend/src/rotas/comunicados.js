@@ -1,6 +1,17 @@
 import { Router } from 'express';
-import { naoEncontrado } from '../erros.js';
+import { acessoNegado, naoEncontrado } from '../erros.js';
 import { idDaRota, textoObrigatorio } from '../validacao.js';
+
+// Apenas o autor edita o próprio comunicado.
+export function podeEditar(usuario, comunicado) {
+  return comunicado.autorId === usuario.id;
+}
+
+// O autor exclui o próprio comunicado; se o autor foi removido,
+// qualquer administrador pode excluí-lo para que não fique sem dono.
+export function podeExcluir(usuario, comunicado) {
+  return comunicado.autorId === usuario.id || (comunicado.autorId === null && usuario.perfil === 'admin');
+}
 
 const CONSULTA = `
   SELECT c.id, c.titulo, c.conteudo, c.criado_em AS criadoEm, c.atualizado_em AS atualizadoEm,
@@ -42,7 +53,9 @@ export function rotasComunicados({ pool, exigirAdmin }) {
 
   rotas.put('/:id', exigirAdmin, async (req, res) => {
     const id = idDaRota(req.params.id);
-    await buscar(id);
+    if (!podeEditar(req.usuario, await buscar(id))) {
+      throw acessoNegado('Apenas o autor pode editar este comunicado');
+    }
     const { titulo, conteudo } = lerCorpo(req.body);
     await pool.query('UPDATE comunicados SET titulo = ?, conteudo = ? WHERE id = ?', [titulo, conteudo, id]);
     res.json(await buscar(id));
@@ -50,7 +63,9 @@ export function rotasComunicados({ pool, exigirAdmin }) {
 
   rotas.delete('/:id', exigirAdmin, async (req, res) => {
     const id = idDaRota(req.params.id);
-    await buscar(id);
+    if (!podeExcluir(req.usuario, await buscar(id))) {
+      throw acessoNegado('Apenas o autor pode excluir este comunicado');
+    }
     await pool.query('DELETE FROM comunicados WHERE id = ?', [id]);
     res.status(204).end();
   });
