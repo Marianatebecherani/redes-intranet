@@ -2,7 +2,7 @@
 
 Intranet conteinerizada com Docker, desenvolvida para o desafio **5) Docker e Intranet**: hospedar um site local de intranet com persistência de dados, banco de dados para gerenciamento de informações e sistema de autenticação para restringir acessos.
 
-> **Estado atual:** estrutura inicial do repositório. A aplicação, o banco e os arquivos Docker ainda não foram implementados; o andamento está na seção [Metas do projeto](#metas-do-projeto).
+> **Estado atual:** scripts do banco de dados implementados. A aplicação e os arquivos Docker ainda não foram implementados; o andamento está na seção [Metas do projeto](#metas-do-projeto).
 
 ## Arquitetura
 
@@ -41,11 +41,11 @@ As decisões técnicas estão detalhadas em [docs/ARQUITETURA.md](docs/ARQUITETU
 | --- | --- | --- |
 | 1 | Ambiente conteinerizado com Docker: 3 réplicas da aplicação e 1 banco MySQL. | Pendente |
 | 2 | Persistência de dados: volume do MySQL e pastas compartilhadas montadas nos containers. | Pendente |
-| 3 | Banco de dados para gerenciamento das informações da intranet. | Pendente |
+| 3 | Banco de dados para gerenciamento das informações da intranet. | Em andamento: tabelas e dados iniciais |
 | 4 | Sistema de autenticação com perfis `admin` e `usuario` para restringir acessos. | Pendente |
 | 5 | Explorador de arquivos com upload e download em `/compartilhamento/admin` e `/compartilhamento/geral`. | Pendente |
 | 6 | Ferramenta para deixar imagens PNG em formato redondo. | Pendente |
-| 7 | Usuários iniciais com permissões por pasta. | Pendente |
+| 7 | Usuários iniciais com permissões por pasta. | Em andamento: usuários criados no banco |
 | 8 | Mural de comunicados, diretório de colaboradores e gestão de usuários. | Pendente |
 
 ### Permissões das pastas compartilhadas
@@ -73,7 +73,7 @@ Todos os usuários iniciais terão a senha padrão `capivara`, armazenada no ban
 | --- | --- |
 | [frontend/](frontend/README.md) | Interface React + Vite: login, mural, diretório, explorador de arquivos e editor de imagens. |
 | [backend/](backend/README.md) | API Express: autenticação, permissões, regras de negócio, arquivos e entrega do frontend. |
-| [database/](database/README.md) | Scripts SQL de criação das tabelas e dados iniciais do MySQL. |
+| [database/](database/README.md) | Scripts SQL de criação das tabelas e dados iniciais do MySQL 8.4. |
 | [infra/](infra/README.md) | Documentação de implantação na EC2 e integração com o nginx. |
 | [docs/](docs/README.md) | Arquitetura, decisões técnicas e convenções de desenvolvimento. |
 | [.github/](.github/workflows/README.md) | Espaço reservado para automações futuras. |

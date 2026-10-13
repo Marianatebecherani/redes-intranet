@@ -7,7 +7,7 @@ Este documento registra as decisões adotadas para a Redes Intranet. Itens ainda
 | Serviço | Imagem | Porta no host | Função |
 | --- | --- | --- | --- |
 | `app1`, `app2`, `app3` | Imagem própria (Node.js + Express + build React) | `3001`, `3002`, `3003` | Réplicas idênticas da intranet. |
-| `db` | MySQL 8 | Não publicada | Banco de dados da intranet. |
+| `db` | MySQL 8.4 | Não publicada | Banco de dados da intranet. |
 
 O proxy reverso e o balanceamento de carga entre as três réplicas são feitos por nginx instalado diretamente na EC2, fora do Docker. A configuração do nginx não faz parte deste repositório.
 
